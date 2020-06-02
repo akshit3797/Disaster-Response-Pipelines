@@ -64,7 +64,7 @@ Finally, after transformation we load the data into a sqlite database.
 	
 	- Model Output
 	
-	![Capture](Capture.png)
+	![Capture](Capture.PNG)
 	
 We have used micro-averaged F1 score as our metric as it is the best in case of multi-label classification.
 
