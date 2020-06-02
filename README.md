@@ -22,7 +22,7 @@ Finally, I created a web app that will extract data from this database to provid
 	|- disaster_categories.csv  # data to process 
 	|- disaster_messages.csv  # data to process
 	|- process_data.py
-	|- InsertDatabaseName.db   # database to save clean data to
+	|- DisasterResponse.db   # database to save clean data to
 
 	- models
 	|- train_classifier.py
@@ -47,9 +47,9 @@ Finally, I created a web app that will extract data from this database to provid
 
 We first extracted the data from two given files "messages.csv" and "categories.csv". We then performed the following transformation:
 	
-	- perform cleaning operations such as expanding the multiple categories into seperate columns, extract categories values, replace the previous categories with new columns and removing duplicates and null values
+   - perform cleaning operations such as expanding the multiple categories into seperate columns, extract categories values, replace the previous categories with new columns and removing duplicates and null values
 	
-	- We also cleaned the 'Related' category column as instead of two values (0 & 1), it had three values (0, 1 & 2). We replaced 2 with 1 after doing some analysis.
+   - We also cleaned the 'Related' category column as instead of two values (0 & 1), it had three values (0, 1 & 2). We replaced 2 with 1 after doing some analysis.
 	
 Finally, after transformation we load the data into a sqlite database.
 
@@ -82,6 +82,6 @@ Type a message such as: Hurricane lead to water and food shortage in costa rica
 ![Example](Example.png)
 
 ### Future improvements :
-	- We can achieve good accuracy by using the algorithm like LSTM with word embedding.
-	- Better pre-processing techniques can be used.
-	- We can do upsampling or undersampling to account for imbalance in the dataset
+  - We can achieve good accuracy by using the algorithm like LSTM with word embedding.
+  - Better pre-processing techniques can be used.
+  - We can do upsampling or undersampling to account for imbalance in the dataset
