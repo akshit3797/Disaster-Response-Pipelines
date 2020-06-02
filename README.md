@@ -43,12 +43,45 @@ Finally, I created a web app that will extract data from this database to provid
 
 3. Go to http://0.0.0.0:3001/
 
+### ETL Pipeline:
+
+We first extracted the data from two given files "messages.csv" and "categories.csv". We then performed the following transformation:
+	
+	- perform cleaning operations such as expanding the multiple categories into seperate columns, extract categories values, replace the previous categories with new columns and removing duplicates and null values
+	
+	- We also cleaned the 'Related' category column as instead of two values (0 & 1), it had three values (0, 1 & 2). We replaced 2 with 1 after doing some analysis.
+	
+Finally, after transformation we load the data into a sqlite database.
+
+### ML Pipeline:
+
+1. First, we loaded the data from sqlite database that was prepared in the ETL step and generate features (X) and labels (Y).
+2. We defined a tokenize() that performs lower case, removes punctuations, stopwords, tokenizes and then finally lemmatizes and returns the list of cleaned tokens in the message.
+3. We then create a ML Pipeline using scikit learn library. The pipeline consists of:
+	- Tfidf Vectorizer with tokenizer defined as above.
+	- LogisticRegression() as the ML model
+	- Used MultiOutputClassifier that trains seperate model for each label. Used in multilabel classification problem.
+	
+	- Model Output
+	
+	![Capture](Capture.png)
+	
+We have used micro-averaged F1 score as our metric as it is the best in case of multi-label classification.
+
+### Output:
 
 ![disaster_response_project2](disaster_response_project2.png)
 
-### Example 
+#### 1. Visualisation Example
+
+#### 2. Classify Tweets Example 
 
 Type a message such as: Hurricane lead to water and food shortage in costa rica
 
 
 ![Example](Example.png)
+
+### Future improvements :
+	- We can achieve good accuracy by using the algorithm like LSTM with word embedding.
+	- Better pre-processing techniques can be used.
+	- We can do upsampling or undersampling to account for imbalance in the dataset
