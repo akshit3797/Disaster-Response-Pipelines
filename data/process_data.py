@@ -68,6 +68,12 @@ def clean_data(df):
         df = df.drop_duplicates()
         print("Duplicates Removed.")
         
+        # Drop missing values rows
+        df.dropna(subset=category_colnames, inplace=True)
+        
+        # Replace category value from 2 to 0
+        df['related'] = df['related'].replace({2:0})
+        
         return df
 
 
@@ -80,7 +86,7 @@ def save_data(df, database_filename):
        2.  database_filename: database to store the cleaned dataframe 
     '''
     engine = create_engine('sqlite:///InsertDatabaseName.db')
-    df.to_sql('InsertTableName', engine, index=False)
+    df.to_sql('InsertTableName', engine, index=False,if_exists='replace')
 
 def main():
     if len(sys.argv) == 4:
