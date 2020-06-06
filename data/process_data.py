@@ -17,10 +17,10 @@ def load_data(messages_filepath, categories_filepath):
     
    
     # load messages dataset
-    messages = pd.read_csv('messages.csv')
+    messages = pd.read_csv(messages_filepath)
     
     # load categories dataset
-    categories = pd.read_csv('categories.csv')
+    categories = pd.read_csv(categories_filepath)
     
     # Merged dataframe on id column
     df = pd.merge(messages,categories,how='left',on='id')
@@ -39,7 +39,7 @@ def clean_data(df):
     '''
     
     # create a dataframe of the 36 individual category columns
-    categories = df.categories.str.split(';',expand=True)
+    categories = df['categories'].str.split(';',expand=True)
     
     # Split categories into seperate category columns
     category_colnames = categories.iloc[0].str[:-2].tolist()
@@ -47,34 +47,36 @@ def clean_data(df):
     # rename the columns of `categories`
     categories.columns = category_colnames
     
+#     print(categories)
     # Convert category values to just numbers 0 or 1. 
-    for column in categories:
+    for column in categories.columns:
         # set each value to be the last character of the string
         categories[column] = categories[column].str[-1]
 
         # convert column from string to numeric
         categories[column] = categories[column].astype('int')
         
-        # drop the original categories column from `df`
-        df = df.drop('categories',axis=1)
+    # drop the original categories column from `df`
+    df = df.drop('categories',axis=1)
         
-        # concatenate the original dataframe with the new `categories` dataframe
-        df = pd.concat([df,categories],axis=1)
+    # concatenate the original dataframe with the new `categories` dataframe
+    df = pd.concat([df,categories],axis=1)
         
-        # check number of duplicates
-        print("No. of duplicates: ",df[df.duplicated()].shape[0])
         
-        # drop duplicates
-        df = df.drop_duplicates()
-        print("Duplicates Removed.")
+    # check number of duplicates
+    print("No. of duplicates: ",df[df.duplicated()].shape[0])
         
-        # Drop missing values rows
-        df.dropna(subset=category_colnames, inplace=True)
+    # drop duplicates
+    df = df.drop_duplicates()
+    print("Duplicates Removed.")
         
-        # Replace category value from 2 to 0
-        df['related'] = df['related'].replace({2:0})
+    # Drop missing values rows
+    df.dropna(subset=category_colnames, inplace=True)
         
-        return df
+    # Replace category value from 2 to 0
+    df['related'] = df['related'].replace({2:1})
+        
+    return df
 
 
 def save_data(df, database_filename):
@@ -85,8 +87,8 @@ def save_data(df, database_filename):
        1.  df: dataframe
        2.  database_filename: database to store the cleaned dataframe 
     '''
-    engine = create_engine('sqlite:///InsertDatabaseName.db')
-    df.to_sql('InsertTableName', engine, index=False,if_exists='replace')
+    engine = create_engine('sqlite:///'+database_filename)
+    df.to_sql('messages', engine, index=False,if_exists='replace')
 
 def main():
     if len(sys.argv) == 4:
